@@ -1,0 +1,26 @@
+## ${note}
+
+%{ if linked_setups != null ~}
+data "terraform_remote_state" "linked" {
+  for_each = ${linked_setups}
+
+  backend = each.value.backend
+  config  = each.value.config
+}
+
+%{ endif ~}
+%{ if extra_content != null ~}
+${extra_content}
+
+%{ endif ~}
+
+module "this" {
+  source  = "${source}"
+  version = "${version}"
+%{ for key, value in variables }
+  ${key} = ${replace(replace(replace(replace(replace(jsonencode(value), "\\u003c", "<"), "\\u003e", ">"), "\\u0026", "&"), "[\\\"", "[\""), "\\\"]", "\"]")}%{ endfor ~}
+
+%{ if module_nested_provider != null ~}
+  providers = ${jsonencode(module_nested_provider)}%{ endif ~}
+
+}

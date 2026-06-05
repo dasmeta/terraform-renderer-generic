@@ -17,7 +17,7 @@
 %{ for key1, value1 in value.blocks }
     ${key1} {
 %{ for nested_key1, nested_value1 in value1 }
-      ${nested_key1} = ${replace(replace(jsonencode(nested_value1), "this[\\\"", "this[\""), "\\\"]", "\"]")}
+      ${nested_key1} = ${replace(replace(jsonencode(nested_value1), "[\\\"", "[\""), "\\\"]", "\"]")}
 %{ endfor ~}
     }
 %{ endfor ~}

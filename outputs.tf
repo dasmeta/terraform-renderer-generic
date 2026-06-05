@@ -12,3 +12,8 @@ output "rendered_name" {
   value       = local.name_specials_clean
   description = "Normalized generated setup name."
 }
+
+output "effective_linked_setups" {
+  value       = local.effective_linked_setup_names
+  description = "Effective linked setup names after merging explicit and auto-detected references."
+}

@@ -11,10 +11,14 @@ variable "setup_path" {
 
 variable "module_config" {
   type = object({
-    source    = string
-    version   = string
-    variables = optional(any, {})
-    providers = optional(any, [])
+    source    = string            # Terraform module source to render into the generated setup.
+    version   = string            # Terraform module version constraint or exact version to render.
+    variables = optional(any, {}) # Input variables passed to the generated module block.
+    providers = optional(any, []) # Provider definitions rendered into generated provider and version files.
+    output = optional(object({
+      enabled   = optional(bool, true) # Whether to render outputs.tf for the generated setup.
+      sensitive = optional(bool, null) # Whether the generated results output should be marked sensitive.
+    }), {})                            # Output rendering options that belong to the generated module setup.
   })
   description = "Grouped Terraform module configuration rendered into generated files."
 }
@@ -27,26 +31,20 @@ variable "target_dir" {
 
 variable "terraform" {
   type = object({
-    version = optional(string, "~> 1.3")
+    version = optional(string, "~> 1.3") # Terraform version constraint rendered into versions.tf.
     backend = optional(object({
-      name    = string
-      configs = optional(any, {})
+      name    = string            # Terraform backend type rendered into versions.tf.
+      configs = optional(any, {}) # Backend configuration arguments rendered for the backend block.
       }), {
-      name    = null
-      configs = null
-    })
+      name    = null # No backend block is rendered when backend.name is null.
+      configs = null # No backend config entries are rendered when backend.configs is null.
+    })               # Backend rendering settings for the generated setup.
     cloud = optional(object({
-      organization = string
-    }), null)
+      organization = string # Terraform Cloud organization name rendered into the cloud block.
+    }), null)               # Optional Terraform Cloud runtime configuration for the generated setup.
   })
   default     = {}
   description = "Grouped Terraform runtime configuration rendered into generated versions.tf."
-}
-
-variable "linked_setups" {
-  type        = any
-  default     = {}
-  description = "Optional linked setup remote-state definitions used for generated output wiring in main.tf."
 }
 
 variable "provider_custom_var_blocks" {
@@ -61,10 +59,18 @@ variable "provider_default_tags" {
   description = "Optional provider-specific default tag settings. Currently supports aws default_tags injection."
 }
 
-variable "linked_setup_result_mapping" {
-  type        = any
-  default     = null
-  description = "Optional explicit linked-setup result mapping used for interpolation replacement. When null, the module derives remote-state mappings from linked_setups."
+variable "linked" {
+  type = object({
+    setups                  = optional(any, {})      # Explicit linked setup definitions keyed by referenced setup name.
+    result_mapping          = optional(any, null)    # Optional explicit interpolation target mapping for linked setup results.
+    result_mapping_template = optional(string, null) # Optional format string used to derive linked setup result mappings.
+    data_content_template   = optional(string, null) # Optional extra Terraform content template used for linked setup data blocks.
+    query = optional(object({
+      organization = optional(string, null) # Optional organization context used by driver-specific linked setup queries.
+    }), {})                                 # Optional query context for wrapper-provided linked setup content templates.
+  })
+  default     = {}
+  description = "Grouped linked-setup configuration used for interpolation replacement and generated linked setup data content."
 }
 
 variable "main_tf_extra_content" {
@@ -73,17 +79,21 @@ variable "main_tf_extra_content" {
   description = "Optional extra Terraform content inserted before the generated module block in main.tf."
 }
 
-variable "output" {
-  type = object({
-    enabled   = optional(bool, true)
-    sensitive = optional(bool, null)
-  })
-  default     = {}
-  description = "Optional generated outputs.tf configuration. By default the module renders output \"results\" with value = module.this."
+variable "note" {
+  type        = string
+  default     = "This file is generated. Manage it through the upstream YAML-driven workflow instead of editing it directly."
+  description = "Note/comment text used in generated files."
 }
 
-variable "generated_by_module" {
-  type        = string
-  default     = "dasmeta/terraform-renderer-generic"
-  description = "Module identifier written into generated README.md."
+variable "readme" {
+  type = object({
+    generated_by_module  = optional(string, "dasmeta/generic/renderer")                                                                                                                                                                                                                                                                                                                                                                                                                                                        # Module identifier used to derive the generated README module URL.
+    intro                = optional(string, "This folder content has been generated by using a special Terraform code generator module. Direct or manual changes in this folder should be avoided unless there is a special need, such as debugging or applying a hotfix. Please follow the flow, format, and instructions for managing this content through configuration files, most likely YAML files in the repository root, and the corresponding CI/CD action or Terraform generator code located next to those files.") # Introductory README paragraph rendered above setup metadata.
+    module_url           = optional(string, null)                                                                                                                                                                                                                                                                                                                                                                                                                                                                              # Module URL shown in the generated README.
+    setup_label          = optional(string, "generated setup name")                                                                                                                                                                                                                                                                                                                                                                                                                                                            # Label used for the generated setup identity line.
+    module_source_label  = optional(string, "tf module source")                                                                                                                                                                                                                                                                                                                                                                                                                                                                # Label used for the Terraform module source line.
+    module_version_label = optional(string, "tf module version")                                                                                                                                                                                                                                                                                                                                                                                                                                                               # Label used for the Terraform module version line.
+  })
+  default     = {}
+  description = "Grouped README rendering configuration for generated setup documentation."
 }

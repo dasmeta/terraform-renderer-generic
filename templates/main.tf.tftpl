@@ -1,6 +1,6 @@
 ## ${note}
 
-%{ if linked_setups != null ~}
+%{ if linked_setups != null }
 data "terraform_remote_state" "linked" {
   for_each = ${linked_setups}
 
@@ -9,11 +9,6 @@ data "terraform_remote_state" "linked" {
 }
 
 %{ endif ~}
-%{ if extra_content != null ~}
-${extra_content}
-
-%{ endif ~}
-
 module "this" {
   source  = "${source}"
   version = "${version}"
@@ -24,3 +19,8 @@ module "this" {
   providers = ${jsonencode(module_nested_provider)}%{ endif ~}
 
 }
+%{ if extra_content != null ~}
+
+
+${chomp(extra_content)}
+%{ endif ~}

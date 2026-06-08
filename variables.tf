@@ -81,7 +81,7 @@ variable "main_tf_extra_content" {
 
 variable "note" {
   type        = string
-  default     = "This file is generated. Manage it through the upstream YAML-driven workflow instead of editing it directly."
+  default     = "This file and its content are generated based on config, pleas check README.md for more details"
   description = "Note/comment text used in generated files."
 }
 

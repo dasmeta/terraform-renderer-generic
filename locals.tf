@@ -96,7 +96,12 @@ locals {
     local.linked_setup_data_content,
     var.main_tf_extra_content
   ]))
-  aws_default_tags_config = try(var.provider_default_tags.aws, null)
+  provider_custom_var_blocks = {
+    for provider_name, provider_config in var.provider_configs :
+    provider_name => try(provider_config.custom_var_blocks, {})
+    if try(provider_config.custom_var_blocks, null) != null
+  }
+  aws_default_tags_config = try(var.provider_configs.aws.default_tags, null)
   aws_generated_default_tags = local.aws_default_tags_config != null && try(local.aws_default_tags_config.enabled, false) ? {
     default_tags = {
       tags = merge(
@@ -116,9 +121,9 @@ locals {
     }
   } : {}
   effective_provider_custom_var_blocks = merge(
-    var.provider_custom_var_blocks,
+    local.provider_custom_var_blocks,
     local.aws_generated_default_tags != {} ? {
-      aws = provider::deepmerge::mergo(try(var.provider_custom_var_blocks.aws, {}), local.aws_generated_default_tags)
+      aws = provider::deepmerge::mergo(try(local.provider_custom_var_blocks.aws, {}), local.aws_generated_default_tags)
     } : {}
   )
   rendered_provider_custom_var_blocks = {

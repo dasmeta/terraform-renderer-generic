@@ -47,16 +47,10 @@ variable "terraform" {
   description = "Grouped Terraform runtime configuration rendered into generated versions.tf."
 }
 
-variable "provider_custom_var_blocks" {
+variable "provider_configs" {
   type        = any
   default     = {}
-  description = "Optional provider-specific custom blocks merged into provider rendering. Useful for blocks like aws.default_tags."
-}
-
-variable "provider_default_tags" {
-  type        = any
-  default     = {}
-  description = "Optional provider-specific default tag settings. Currently supports aws default_tags injection."
+  description = "Optional grouped provider-specific configuration, including custom variable blocks and default tag settings."
 }
 
 variable "linked" {

@@ -13,7 +13,7 @@ terraform {
 %{ if terraform_backend.name != null ~}
   backend "${terraform_backend.name}" {
 %{ for key, value in terraform_backend.configs }
-    ${key} = ${value}%{ endfor ~}
+    ${key} = ${replace(replace(replace(replace(replace(jsonencode(value), "\\u003c", "<"), "\\u003e", ">"), "\\u0026", "&"), "[\\\"", "[\""), "\\\"]", "\"]")}%{ endfor ~}
 
   }
 %{ endif ~}

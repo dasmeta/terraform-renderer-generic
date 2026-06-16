@@ -246,7 +246,7 @@ locals {
       }]
       terraform_backend = {
         name    = local.effective_terraform.backend.name
-        configs = { for key, value in local.effective_terraform.backend.configs : key => jsonencode(value) }
+        configs = local.effective_terraform.backend.configs
       }
       terraform_cloud = {
         organization = local.effective_terraform.cloud.organization

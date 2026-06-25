@@ -12,38 +12,19 @@ Fetches and merges MetaCloud infrastructure YAML workspace definitions for drive
 
 ## Usage
 
-Driver modules call this with a sibling relative path when the driver is the root module:
+Driver modules call this submodule from the Terraform registry:
 
 ```hcl
 module "infra_yaml_fetched" {
-  count  = var.yaml_files == null ? 1 : 0
-  source = "../terraform-renderer-generic/modules/infra-yaml-fetched"
-  # source  = "dasmeta/generic/renderer//modules/infra-yaml-fetched"
-  # version = "1.1.0"
+  source  = "dasmeta/generic/renderer//modules/infra-yaml-fetched"
+  version = "1.1.0"
 
   yamldir = var.yamldir
 }
 ```
 
-When the driver is loaded as a nested local module (for example from `_metacloud.tf` via `file://`),
-Terraform blocks `../` paths that escape the driver package. In that case, fetch YAML at the
-`_metacloud.tf` root and pass the outputs into the driver:
-
-```hcl
-module "infra_yaml_fetched" {
-  source  = "../../../../terraform-renderer-generic/modules/infra-yaml-fetched"
-  yamldir = "${path.module}/."
-}
-
-module "metacloud" {
-  source                          = "../../../../terraform-terragrunt-cli"
-  yamldir                         = "${path.module}/."
-  yaml_files                      = module.infra_yaml_fetched.yaml_files
-  auto_detected_linked_workspaces = module.infra_yaml_fetched.auto_detected_linked_workspaces
-}
-```
-
-After `dasmeta/generic/renderer` `1.1.0` is published, switch driver and root calls to the registry source.
+The registry source works when the driver is the root module or when it is loaded
+as a nested local module from `_metacloud.tf`.
 
 ## Outputs
 

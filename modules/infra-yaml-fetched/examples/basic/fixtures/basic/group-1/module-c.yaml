@@ -1,0 +1,6 @@
+source: dasmeta/empty/null
+version: 1.2.2
+variables:
+  upstream: ${group-0/module-a.output}
+linked_workspaces:
+  - group-0/module-a

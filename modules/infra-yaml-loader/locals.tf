@@ -40,13 +40,38 @@ locals {
     )
   }
 
-  yaml_files = {
+  is_local_module_source = {
     for key, item in local.yaml_files_raw :
+    key => try(
+      !startswith(tostring(item.source), "git::")
+      && !startswith(tostring(item.source), "http://")
+      && !startswith(tostring(item.source), "https://")
+      && (
+        startswith(tostring(item.source), ".")
+        || startswith(tostring(item.source), "/")
+        || startswith(tostring(item.source), "~")
+      ),
+      false
+    )
+  }
+
+  yaml_files_resolved = {
+    for key, item in local.yaml_files_raw :
+    key => merge(item, {
+      version = coalesce(
+        try(item.version, null),
+        local.is_local_module_source[key] ? "local" : null,
+      )
+    })
+  }
+
+  yaml_files = {
+    for key, item in local.yaml_files_resolved :
     key => item
     if try(item.source, null) != null && try(item.version, null) != null
   }
 
-  auto_detected_linked_workspaces = {
+  interpolation_detected_linked_workspaces = {
     for path, item in local.yaml_files :
     path => distinct([
       for match in flatten([
@@ -55,5 +80,25 @@ locals {
       ]) :
       replace(match, "/(\\..+|\\[.+)/", "")
     ])
+  }
+
+  path_inferred_linked_workspaces = {
+    for path in keys(local.yaml_files) :
+    path => [
+      "1-environments/${regex("^2-products/(.+)/[^/]+/setups/[^/]+$", path)}/${regex("^2-products/.+/([^/]+)/setups/[^/]+$", path)}/cluster"
+    ]
+    if can(regex("^2-products/.+/[^/]+/setups/[^/]+$", path))
+    && contains(
+      keys(local.yaml_files),
+      "1-environments/${regex("^2-products/(.+)/[^/]+/setups/[^/]+$", path)}/${regex("^2-products/.+/([^/]+)/setups/[^/]+$", path)}/cluster"
+    )
+  }
+
+  auto_detected_linked_workspaces = {
+    for path in keys(local.yaml_files) :
+    path => distinct(concat(
+      try(local.interpolation_detected_linked_workspaces[path], []),
+      try(local.path_inferred_linked_workspaces[path], []),
+    ))
   }
 }

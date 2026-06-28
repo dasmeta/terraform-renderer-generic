@@ -15,7 +15,7 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_infra_yaml_fetched"></a> [infra\_yaml\_fetched](#module\_infra\_yaml\_fetched) | ../../ | n/a |
+| <a name="module_infra_yaml_loader"></a> [infra\_yaml\_loader](#module\_infra\_yaml\_loader) | ../../ | n/a |
 
 ## Resources
 

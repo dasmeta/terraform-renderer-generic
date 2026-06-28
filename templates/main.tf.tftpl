@@ -11,7 +11,9 @@ data "terraform_remote_state" "linked" {
 %{ endif ~}
 module "this" {
   source  = "${source}"
+%{ if version != "local" ~}
   version = "${version}"
+%{ endif ~}
 %{ for key, value in variables }
   ${key} = ${replace(replace(replace(replace(replace(jsonencode(value), "\\u003c", "<"), "\\u003e", ">"), "\\u0026", "&"), "[\\\"", "[\""), "\\\"]", "\"]")}%{ endfor ~}
 

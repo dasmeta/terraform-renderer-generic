@@ -26,7 +26,7 @@ workflows.
 
 ## Submodules
 
-### `modules/infra-yaml-fetched`
+### `modules/infra-yaml-loader`
 
 Fetches and merges MetaCloud infrastructure YAML workspace definitions for Terragrunt,
 Terramate, and Terraform Cloud driver modules:
@@ -37,8 +37,8 @@ Terramate, and Terraform Cloud driver modules:
 - auto-detects linked workspace paths from `$${...}` interpolation
 
 ```hcl
-module "infra_yaml_fetched" {
-  source  = "dasmeta/generic/renderer//modules/infra-yaml-fetched"
+module "infra_yaml_loader" {
+  source  = "dasmeta/generic/renderer//modules/infra-yaml-loader"
   version = "1.1.0"
 
   yamldir = var.yamldir

@@ -1,4 +1,4 @@
-# Infra YAML Fetched Submodule
+# Infra YAML Loader Submodule
 
 ## Why
 
@@ -11,7 +11,7 @@ repeated three times.
 
 ## What
 
-Add a reusable submodule at `modules/infra-yaml-fetched` inside
+Add a reusable submodule at `modules/infra-yaml-loader` inside
 `terraform-renderer-generic` that:
 
 - merges root `_.yaml` and folder `**/_.yaml` shared configs into workspace YAML
@@ -26,8 +26,8 @@ Add a reusable submodule at `modules/infra-yaml-fetched` inside
 Driver modules consume it from the registry:
 
 ```hcl
-module "infra_yaml_fetched" {
-  source  = "dasmeta/generic/renderer//modules/infra-yaml-fetched"
+module "infra_yaml_loader" {
+  source  = "dasmeta/generic/renderer//modules/infra-yaml-loader"
   version = "x.y.z"
 
   yamldir = var.yamldir
@@ -36,7 +36,7 @@ module "infra_yaml_fetched" {
 
 ## Acceptance Criteria
 
-- `modules/infra-yaml-fetched` exists with variables, locals, outputs, versions,
+- `modules/infra-yaml-loader` exists with variables, locals, outputs, versions,
   README, and an executable example with check blocks
 - root renderer README documents the submodule
 - example validates shared-config merge, workspace filtering, and linked-workspace

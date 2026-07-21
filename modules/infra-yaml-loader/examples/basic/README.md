@@ -16,6 +16,7 @@ No requirements.
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_infra_yaml_loader"></a> [infra\_yaml\_loader](#module\_infra\_yaml\_loader) | ../../ | n/a |
+| <a name="module_infra_yaml_loader_empty_yaml"></a> [infra\_yaml\_loader\_empty\_yaml](#module\_infra\_yaml\_loader\_empty\_yaml) | ../../ | n/a |
 
 ## Resources
 

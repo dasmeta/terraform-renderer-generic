@@ -35,3 +35,10 @@ check "auto_detects_linked_workspaces" {
     error_message = "Linked workspace references should be auto-detected from interpolation."
   }
 }
+
+check "ignores_empty_yaml_files" {
+  assert {
+    condition     = length(module.infra_yaml_loader_empty_yaml.yaml_paths) == 0
+    error_message = "Empty YAML files without source and version should be ignored."
+  }
+}

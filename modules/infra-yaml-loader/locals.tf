@@ -58,10 +58,7 @@ locals {
   yaml_files_resolved = {
     for key, item in local.yaml_files_raw :
     key => merge(item, {
-      version = coalesce(
-        try(item.version, null),
-        local.is_local_module_source[key] ? "local" : null,
-      )
+      version = try(item.version, try(local.is_local_module_source[key], false) ? "local" : null)
     })
   }
 

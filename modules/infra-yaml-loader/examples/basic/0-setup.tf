@@ -9,3 +9,9 @@ module "infra_yaml_loader_empty_yaml" {
 
   yamldir = "${path.module}/fixtures/empty-yaml"
 }
+
+module "infra_yaml_loader_tiered" {
+  source = "../../"
+
+  yamldir = "${path.module}/fixtures/tiered"
+}

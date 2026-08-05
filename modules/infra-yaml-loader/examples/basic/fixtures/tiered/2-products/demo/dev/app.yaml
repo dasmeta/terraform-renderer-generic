@@ -1,0 +1,7 @@
+source: dasmeta/empty/null
+version: 1.2.2
+providers:
+  - name: kubernetes
+    version: ~> 2.23
+    variables:
+      host: ${1-environments/dev/eks.cluster_host}

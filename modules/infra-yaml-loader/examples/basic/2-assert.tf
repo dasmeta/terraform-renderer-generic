@@ -36,6 +36,27 @@ check "auto_detects_linked_workspaces" {
   }
 }
 
+check "detects_linked_workspaces_in_provider_config" {
+  assert {
+    condition = try(module.infra_yaml_loader_tiered.auto_detected_linked_workspaces["2-products/demo/dev/app"], []) == tolist([
+      "1-environments/dev/eks"
+    ])
+    error_message = "An interpolation reference inside a provider config should link the referenced workspace."
+  }
+}
+
+check "does_not_infer_links_from_directory_layout" {
+  assert {
+    condition     = length(try(module.infra_yaml_loader_tiered.auto_detected_linked_workspaces["2-products/demo/prod/app"], ["missing"])) == 0
+    error_message = "A workspace with no explicit or referenced dependency must not be linked by its path alone."
+  }
+
+  assert {
+    condition     = length(try(module.infra_yaml_loader_tiered.auto_detected_linked_workspaces["1-environments/dev/eks"], ["missing"])) == 0
+    error_message = "An environment workspace must not gain links from tiered path naming."
+  }
+}
+
 check "ignores_empty_yaml_files" {
   assert {
     condition     = length(module.infra_yaml_loader_empty_yaml.yaml_paths) == 0

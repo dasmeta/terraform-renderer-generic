@@ -2,7 +2,7 @@
 
 - [x] Reproduce the `regex()` tuple interpolation failure with a tiered workspace path.
 - [x] Confirm HCL `&&` short-circuits, ruling out the reported non-matching-path failure.
-- [x] Review managed setups (`spm`, `von-poll`, `payconomy`, `sela-ai`, `buycycle`) for the convention.
+- [x] Review five managed infrastructure repositories for the convention.
 - [x] Confirm no managed repository uses a `setups/` directory or a uniform tier order.
 - [x] Confirm the setup-to-cluster case is already covered by interpolation references.
 - [x] Confirm `terraform-tfe-cloud` does not consume `auto_detected_linked_workspaces`.

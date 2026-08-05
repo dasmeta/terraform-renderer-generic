@@ -24,15 +24,16 @@ require.
 
 ## Investigation
 
-Reviewed the managed setups before choosing between fixing and removing:
+Reviewed five managed infrastructure repositories before choosing between fixing and
+removing. Repository identifiers are omitted; only the layout shapes matter here:
 
 | repository | product path shape | `setups/` dir | how environment links are declared |
 |---|---|---|---|
-| `spm/playerplus-iac` | `2-products/<product>/<name>` | no | explicit + reference |
-| `von-poll/iac/terraform-cloud` | `2-product/<env>/<name>` | no | reference |
-| `payconomy/infrastructure` | `2-products/<product>/<env>/<name>` | no | explicit + reference |
-| `sela-ai/infrastructure` | `2-products/<env>/<product>/<name>` | no | explicit + reference |
-| `buycycle/infrastructure` | `2-products/<product-with-env>/<name>` | no | reference |
+| A | `2-products/<product>/<name>` | no | explicit + reference |
+| B | `2-product/<env>/<name>` (singular prefix) | no | reference |
+| C | `2-products/<product>/<env>/<name>` | no | explicit + reference |
+| D | `2-products/<env>/<product>/<name>` | no | explicit + reference |
+| E | `2-products/<product>-<env>/<name>` | no | reference |
 
 The convention matches no managed repository, the path shapes disagree with each
 other, and the case it targeted is already served by the reference form. Removal,

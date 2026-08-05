@@ -22,17 +22,14 @@ Every path matching the convention triggers it, and no YAML restructuring avoids
 it. This reached the published `dasmeta/cloud/tfe` driver and forced a
 `handler_version` pin in `dasmeta-infrastructure`.
 
-**Wrong.** A review of the setups managed today — `spm/playerplus-iac`,
-`von-poll/iac/terraform-cloud`, `payconomy/infrastructure`,
-`sela-ai/infrastructure`, `buycycle/infrastructure` — shows the convention does not
-describe how linking works:
+**Wrong.** A review of five managed infrastructure repositories shows the convention
+does not describe how linking works:
 
 - No repository has a `setups/` directory. The rule matches nothing anywhere.
-- The tier prefixes exist, but their internal order does not agree:
-  `2-products/<product>/<env>/...` in `payconomy`, `2-products/<env>/<product>/...`
-  in `sela-ai`, the environment folded into the product folder name
-  (`2-products/buycycle-dev-2/...`) in `buycycle`, and singular `2-product/<env>/...`
-  in `von-poll`. One regex cannot express these.
+- The tier prefixes exist, but their internal order does not agree. Observed shapes
+  include `2-products/<product>/<env>/...`, `2-products/<env>/<product>/...`, the
+  environment folded into the product folder name (`2-products/<product>-<env>/...`),
+  and a singular `2-product/<env>/...` prefix. One regex cannot express these.
 - The depended-on workspace is not uniformly named `cluster`. Real dependencies
   point at `eks`, `rds-postgres`, `dns`, and others.
 - The case the rule was meant to cover is already covered. A setup that needs
@@ -43,7 +40,7 @@ describe how linking works:
   providers:
     - name: kubernetes
       variables:
-        host: ${1-environments/dev-2/eks.cluster_host}
+        host: ${1-environments/dev/eks.cluster_host}
   ```
 
 - Where a dependency has no value reference, it is declared explicitly:

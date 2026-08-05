@@ -10,6 +10,9 @@ It is intended to hold the provider-agnostic file generation boundary that can
 be reused by multiple drivers such as Terramate and Terraform Cloud based
 workflows.
 
+Debugging this module or a setup that consumes it? See [AGENTS.md](./AGENTS.md)
+for the symptom-to-cause table, inspection recipes, and known traps.
+
 ## What It Generates
 
 - `main.tf`

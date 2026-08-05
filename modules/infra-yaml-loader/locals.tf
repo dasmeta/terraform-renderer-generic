@@ -79,23 +79,11 @@ locals {
     ])
   }
 
-  path_inferred_linked_workspaces = {
-    for path in keys(local.yaml_files) :
-    path => [
-      "1-environments/${regex("^2-products/(.+)/[^/]+/setups/[^/]+$", path)}/${regex("^2-products/.+/([^/]+)/setups/[^/]+$", path)}/cluster"
-    ]
-    if can(regex("^2-products/.+/[^/]+/setups/[^/]+$", path))
-    && contains(
-      keys(local.yaml_files),
-      "1-environments/${regex("^2-products/(.+)/[^/]+/setups/[^/]+$", path)}/${regex("^2-products/.+/([^/]+)/setups/[^/]+$", path)}/cluster"
-    )
-  }
-
+  # Links are declared, never guessed from the directory layout: either explicitly
+  # through the YAML `linked_workspaces` list, or through a ${path.output} reference
+  # that already names the workspace it depends on.
   auto_detected_linked_workspaces = {
     for path in keys(local.yaml_files) :
-    path => distinct(concat(
-      try(local.interpolation_detected_linked_workspaces[path], []),
-      try(local.path_inferred_linked_workspaces[path], []),
-    ))
+    path => try(local.interpolation_detected_linked_workspaces[path], [])
   }
 }
